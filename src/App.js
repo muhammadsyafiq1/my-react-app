@@ -11,24 +11,24 @@ export default class App extends Component {
   
     this.state = {
       menus: [],
-      categories: []
+      // categories: []
     }
   }
   async componentDidMount() {
     try {
       const menusResponse = await axios.get(API_URL + 'products');
-      const categoriesResponse = await axios.get(API_URL + 'categories');
+      // const categoriesResponse = await axios.get(API_URL + 'categories');
 
       this.setState({
         menus: menusResponse.data,
-        categories: categoriesResponse.data
+        // categories: categoriesResponse.data
       });
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   }
   render() {
-    const {menus} = this.state
+    const {menus} = this.state;
     return (
       <div className="App">
         <NavbarComponent />
