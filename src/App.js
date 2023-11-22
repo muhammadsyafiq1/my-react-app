@@ -10,19 +10,22 @@ export default class App extends Component {
     super(props)
   
     this.state = {
-       menus: []
+      menus: [],
+      categories: []
     }
   }
-  componentDidMount(){
-    axios
-      .get(API_URL+"products")
-      .then(res => {
-        const menus = res.data;
-        this.setState({menus});
-      })
-      .catch(error => {
-        console.log(error);
-      })
+  async componentDidMount() {
+    try {
+      const menusResponse = await axios.get(API_URL + 'products');
+      const categoriesResponse = await axios.get(API_URL + 'categories');
+
+      this.setState({
+        menus: menusResponse.data,
+        categories: categoriesResponse.data
+      });
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   }
   render() {
     const {menus} = this.state
