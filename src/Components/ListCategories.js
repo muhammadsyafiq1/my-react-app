@@ -36,13 +36,14 @@ export default class ListCategories extends Component {
   }
   render() {
     const {categories} =  this.state
+    const {changeCategory} = this.props
     return (
         <Col ms={2} mt={2}>
             <h4> Daftar Kategori</h4>
             <hr/>
             <ListGroup>
               {categories && categories.map((category) => (
-                <ListGroup.Item key={category.id}>
+                <ListGroup.Item key={category.id} onClick={()=>changeCategory(category.nama)}>
                   <Icon nama={category.nama}/>
                   <h5>{category.nama}</h5>
                 </ListGroup.Item>
