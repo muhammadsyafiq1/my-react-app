@@ -28,7 +28,7 @@ export default class App extends Component {
   changeCategory = (value) => {
     this.setState({
       pilihKategori : value,
-      // menus:[]
+      menus:[]  //bisa dihapus
     })
 
     axios
@@ -42,7 +42,7 @@ export default class App extends Component {
       })
   }
   render() {
-    const {menus} = this.state;
+    const {menus, pilihKategori} = this.state;
     return (
       <div className="App">
         <NavbarComponent />
@@ -51,6 +51,7 @@ export default class App extends Component {
             <Row>
               <ListCategories
                 changeCategory={this.changeCategory}
+                pilihKategori={pilihKategori}
               />
               <Col>
                 <h4>Daftar Produk</h4>
