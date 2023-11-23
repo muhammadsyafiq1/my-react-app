@@ -15,17 +15,37 @@ export default class App extends Component {
       keranjangs : []
     }
   }
+
   async componentDidMount() {
     try {
       const menusResponse = await axios.get(API_URL + 'products?category.nama='+this.state.pilihKategori);
+      const keranjangResponse = await axios.get(API_URL + 'keranjangs');
 
       this.setState({
         menus: menusResponse.data,
+        keranjangs: keranjangResponse.data,
       });
+
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   }
+
+   async componentDidUpdate(prevState){
+    if(this.state.keranjangs !== prevState.keranjangs){
+      try {
+        const keranjangResponse = await axios.get(API_URL + 'keranjangs');
+  
+        this.setState({
+          keranjangs: keranjangResponse.data,
+        });
+  
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+  }
+
   changeCategory = (value) => {
     this.setState({
       pilihKategori : value,
@@ -41,6 +61,7 @@ export default class App extends Component {
         console.error('Error fetching data:', error);
       })
   }
+
   masukKeranjang = (value) => {
 
     //cek pesanan yg sama apakah ada
@@ -70,10 +91,9 @@ export default class App extends Component {
             console.log("Error:", error);
           })
         }else{
-          console.log("produknya ada update saja");
           // jika produk yg sama ada lakukan update
           const keranjang = {
-            jumlah: res.data[0] + 1,
+            jumlah: res.data[0].jumlah + 1,
             total_harga: res.data[0].total_harga + value.harga,
             product: value
           };
@@ -97,7 +117,7 @@ export default class App extends Component {
       })
   }
   render() {
-    const {menus, pilihKategori} = this.state;
+    const {menus, pilihKategori, keranjangs} = this.state;
     return (
       <div className="App">
         <NavbarComponent />
@@ -121,7 +141,9 @@ export default class App extends Component {
                 ))}
                 </Row>
               </Col>
-              <Hasil/>
+              <Hasil
+                keranjangs={keranjangs}
+              />
             </Row>
           </Container>
           </div>
