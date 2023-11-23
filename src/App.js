@@ -42,26 +42,58 @@ export default class App extends Component {
       })
   }
   masukKeranjang = (value) => {
-    const keranjang = {
-      jumlah: 1,
-      total_harga: value.harga,
-      product: value
-    }
-    
+
+    //cek pesanan yg sama apakah ada
     axios
-      .post(API_URL+"keranjangs", keranjang)
-      .then(res => {
-        Swal.fire({
-          title: "Berhasil Ditambahkan",
-          text: "Berhasil Ditambahkan" +keranjang.product.nama,
-          imageUrl: "assets/images/"+keranjang.product.category.nama.toLowerCase()+"/"+keranjang.product.gambar,
-          imageWidth: 400,
-          imageHeight: 200,
-          imageAlt: "Custom image"
-        });
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
+      .get(API_URL + "keranjangs?product.id=" + value.id)
+      .then((res) => {
+        if(res.data.length === 0){
+          const keranjang = {
+            jumlah: 1,
+            total_harga: value.harga,
+            product: value
+          };
+          //maka  masukan kekeranjang
+          axios
+            .post(API_URL + "keranjangs", keranjang)
+            .then((res) => {
+              Swal.fire({
+                title: "Berhasil Ditambahkan",
+                text: "Berhasil Ditambahkan" +keranjang.product.nama,
+                imageUrl: "assets/images/"+keranjang.product.category.nama.toLowerCase()+"/"+keranjang.product.gambar,
+                imageWidth: 400,
+                imageHeight: 200,
+                imageAlt: "Custom image"
+              });
+            })
+          .catch((error)=> {
+            console.log("Error:", error);
+          })
+        }else{
+          console.log("produknya ada update saja");
+          // jika produk yg sama ada lakukan update
+          const keranjang = {
+            jumlah: res.data[0] + 1,
+            total_harga: res.data[0].total_harga + value.harga,
+            product: value
+          };
+
+          axios
+            .put(API_URL + "keranjangs/"+res.data[0].id, keranjang)
+            .then((res) => {
+              Swal.fire({
+                title: "Berhasil Ditambahkan",
+                text: "Berhasil Ditambahkan" +keranjang.product.nama,
+                imageUrl: "assets/images/"+keranjang.product.category.nama.toLowerCase()+"/"+keranjang.product.gambar,
+                imageWidth: 400,
+                imageHeight: 200,
+                imageAlt: "Custom image"
+              });
+            })
+          .catch((error)=> {
+            console.log("Error:", error);
+          })
+        }
       })
   }
   render() {
