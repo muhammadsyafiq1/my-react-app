@@ -74,7 +74,9 @@ export default class App extends Component {
         };
   
         const request = res.data.length === 0 ?
+        // jika saat get data pesanan tidak ada maka tambah pesanna
           axios.post(API_URL + "keranjangs", keranjang) :
+        // jika pesanan sudah ada maka update total dan jumlah pesanan
           axios.put(API_URL + "keranjangs/" + res.data[0].id, keranjang);
   
         request.then(() => {
