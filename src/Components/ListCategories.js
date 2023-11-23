@@ -38,7 +38,7 @@ export default class ListCategories extends Component {
     const {categories} =  this.state
     const {changeCategory, pilihKategori} = this.props
     return (
-        <Col ms={2} mt={2}>
+        <Col lg={3} ms={2} mt={2}>
             <h4> Daftar Kategori</h4>
             <hr/>
             <ListGroup>
