@@ -63,59 +63,35 @@ export default class App extends Component {
   }
 
   masukKeranjang = (value) => {
-
-    //cek pesanan yg sama apakah ada
-    axios
-      .get(API_URL + "keranjangs?product.id=" + value.id)
+    const { id, harga, nama, category, gambar } = value;
+  
+    axios.get(API_URL + "keranjangs?product.id=" + id)
       .then((res) => {
-        if(res.data.length === 0){
-          const keranjang = {
-            jumlah: 1,
-            total_harga: value.harga,
-            product: value
-          };
-          //maka  masukan kekeranjang
-          axios
-            .post(API_URL + "keranjangs", keranjang)
-            .then((res) => {
-              Swal.fire({
-                title: "Berhasil Ditambahkan",
-                text: "Berhasil Ditambahkan" +keranjang.product.nama,
-                imageUrl: "assets/images/"+keranjang.product.category.nama.toLowerCase()+"/"+keranjang.product.gambar,
-                imageWidth: 400,
-                imageHeight: 200,
-                imageAlt: "Custom image"
-              });
-            })
-          .catch((error)=> {
-            console.log("Error:", error);
-          })
-        }else{
-          // jika produk yg sama ada lakukan update
-          const keranjang = {
-            jumlah: res.data[0].jumlah + 1,
-            total_harga: res.data[0].total_harga + value.harga,
-            product: value
-          };
-
-          axios
-            .put(API_URL + "keranjangs/"+res.data[0].id, keranjang)
-            .then((res) => {
-              Swal.fire({
-                title: "Berhasil Ditambahkan",
-                text: "Berhasil Ditambahkan" +keranjang.product.nama,
-                imageUrl: "assets/images/"+keranjang.product.category.nama.toLowerCase()+"/"+keranjang.product.gambar,
-                imageWidth: 400,
-                imageHeight: 200,
-                imageAlt: "Custom image"
-              });
-            })
-          .catch((error)=> {
-            console.log("Error:", error);
-          })
-        }
-      })
+        const keranjang = {
+          jumlah: res.data.length === 0 ? 1 : res.data[0].jumlah + 1,
+          total_harga: res.data.length === 0 ? harga : res.data[0].total_harga + harga,
+          product: value
+        };
+  
+        const request = res.data.length === 0 ?
+          axios.post(API_URL + "keranjangs", keranjang) :
+          axios.put(API_URL + "keranjangs/" + res.data[0].id, keranjang);
+  
+        request.then(() => {
+          Swal.fire({
+            title: "Berhasil Ditambahkan",
+            text: "Berhasil Ditambahkan" + nama,
+            imageUrl: `assets/images/${category.nama.toLowerCase()}/${gambar}`,
+            imageWidth: 400,
+            imageHeight: 200,
+            imageAlt: "Custom image"
+          });
+        }).catch((error) => {
+          console.log("Error:", error);
+        });
+      });
   }
+  
   render() {
     const {menus, pilihKategori, keranjangs} = this.state;
     return (
