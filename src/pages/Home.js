@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {API_URL} from "../utils/const.js"
 import { Col, Container, Row } from "react-bootstrap";
-import { Hasil, ListCategories, Menu, NavbarComponent } from '../Components';
+import { Hasil, ListCategories, Menu } from '../Components';
 import React, { Component } from 'react'
 import Swal from 'sweetalert2'
 
